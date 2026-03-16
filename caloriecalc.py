@@ -2,17 +2,18 @@ import FreeSimpleGUI as sg
 
 
 activity_data = [
-    ["Sedentary (Little/no exercise)", 1.2],
-    ["Lightly Active (1–3 days/week)", 1.375],
-    ["Moderately Active (3–5 days/week)", 1.55],
-    ["Very Active (6–7 days/week)", 1.725],
-    ["Super Active (Physical job/training)", 1.9]
+    ["1", 1.2],
+    ["2", 1.375],
+    ["3", 1.55],
+    ["4", 1.725],
+    ["5", 1.9]
 ] # used to calculate BMI of person to be used in caloric calculator
 
 def caloric_intake(age,weight,user_choice,height,sex,): #Set parameters to be passed into the function
     if age < 18: #If the person is too young they cannot use the service
-        print('You need to be 18 to use this service') # returns message if user is under 18 and exits program
-        return # ends program
+        Maint = 'You need to be 18 to use this service' # returns message if user is under 18 and exits program
+        return Maint # ends program
+
     multi = 1.0
     for row in activity_data:
         if row[0] == user_choice:
@@ -28,12 +29,12 @@ def caloric_intake(age,weight,user_choice,height,sex,): #Set parameters to be pa
 
 sg.theme('DarkBlue')
 
-layout = [
+BMR = [
     [sg.Text('Enter Your Age')],
     [sg.InputText(key='-AGE-')],
     [sg.Text('Enter your Weight')],
     [sg.InputText(key='-WEIGHT-')],
-    [sg.Text('How active are you?')],
+    [sg.Text('How active are you? 1-5?')],
     [sg.InputText(key='-ACTIVE-')],
     [sg.Text('How Tall are you?')],
     [sg.InputText(key='-HEIGHT-')],
@@ -42,8 +43,27 @@ layout = [
     [sg.Button('Submit'), sg.Button('Cancel')]
 ]
 
+availability = [   [sg.Text('What days are you available')]
+
+
+
+
+
+]
+
+layout = [
+    [sg.TabGroup([
+        [sg.Tab('Calorie Calculator', BMR),
+         sg.Tab('Other Tool', availability)],
+    ])],
+]
+
 window = sg.Window('Begainners', layout)
 event, values = window.read()
+
+if event == 'cancel':
+    window.close()
+    exit()
 
 
 age = int(values['-AGE-'])
@@ -54,9 +74,11 @@ sex = values['-SEX-']
 
 calculated = caloric_intake(age, weight, user_choice, height, sex)
 
-sg.popup('Your maintainence  calories is', calculated)
-window.close()
-
+if age >= 18:
+    sg.popup('Your maintenance  calories is', calculated, 'calories')
+    window.close()
+else:
+    window.close()
 
 
 
