@@ -10,9 +10,6 @@ activity_data = [
 ] # used to calculate BMI of person to be used in caloric calculator
 
 def caloric_intake(age,weight,user_choice,height,sex,): #Set parameters to be passed into the function
-    if age < 18: #If the person is too young they cannot use the service
-        Maint = 'You need to be 18 to use this service' # returns message if user is under 18 and exits program
-        return Maint # ends program
 
     multi = 1.0
     for row in activity_data:
@@ -32,23 +29,25 @@ sg.theme('DarkBlue')
 BMR = [
     [sg.Text('Enter Your Age')],
     [sg.InputText(key='-AGE-')],
-    [sg.Text('Enter your Weight')],
+    [sg.Text('Enter your Weight in KG')],
     [sg.InputText(key='-WEIGHT-')],
-    [sg.Text('How active are you? 1-5?')],
+    [sg.Text('How active are you on a scale of 1-5?')],
     [sg.InputText(key='-ACTIVE-')],
-    [sg.Text('How Tall are you?')],
+    [sg.Text('How Tall are you in CM?')],
     [sg.InputText(key='-HEIGHT-')],
     [sg.Text('What sex are you?')],
     [sg.InputText(key='-SEX-')],
-    [sg.Button('Submit'), sg.Button('Cancel')]
+    [sg.Button('Submit'), sg.Button('Cancel')] #user entries for TDEE calculator
 ]
 
-availability = [   [sg.Text('What days are you available')]
 
-
-
-
-
+availability = [
+    [sg.Text('Would you like to do Calisthenics or Weight Training?'), sg.Radio('Calisthenics', 'GOAL', key='-Cali-'), sg.Radio('Weight Training', 'GOAL', key='-WeightTrain-')],
+    [sg.Text('What days are you available for 2 hours to workout?')],
+    [sg.Checkbox('Monday', key='-MONDAY-'), sg.Checkbox('Tuesday', key='-TUESDAY-'),
+     sg.Checkbox('Wednesday', key='-WEDNESDAY-'), sg.Checkbox('Thursday', key='-THURSDAY-'),
+     sg.Checkbox('Friday', key='-FRIDAY-'), sg.Checkbox('Saturday', key='-SATURDAY-'),
+     sg.Checkbox('Sunday', key='-SUNDAY-')]
 ]
 
 layout = [
@@ -59,29 +58,21 @@ layout = [
 ]
 
 window = sg.Window('Begainners', layout)
-event, values = window.read()
 
-if event == 'cancel':
-    window.close()
-    exit()
+while True:
+    event, values = window.read()
+    if event in (None, 'Cancel'):
+        window.close()
+        break
+    if event == 'Submit':
+        age = int(values['-AGE-'])
+        weight = float(values['-WEIGHT-'])
+        user_choice = values['-ACTIVE-']
+        height = int(values['-HEIGHT-'])
+        sex = values['-SEX-']
 
-
-age = int(values['-AGE-'])
-weight = float(values['-WEIGHT-'])
-user_choice = values['-ACTIVE-']
-height = int(values['-HEIGHT-'])
-sex = values['-SEX-']
-
-calculated = caloric_intake(age, weight, user_choice, height, sex)
-
-if age >= 18:
-    sg.popup('Your maintenance  calories is', calculated, 'calories')
-    window.close()
-else:
-    window.close()
-
-
-
+        calculated = caloric_intake(age, weight, user_choice, height, sex)
+        sg.popup('Your maintenance calories is', calculated)
 
 
 
