@@ -162,6 +162,65 @@ def bulkcut(calculated, bulk, cut, level_one, level_two, level_three,):
 
     sg.popup('Your Calories are ', calculated + goal_calories)
 
+
+def trackbw(bulk, cut, level_one, level_two, level_three, mon, tue, wed, thu, fri, sat, sun):
+    if (bulk or cut) and (
+            level_one or level_two or level_three):
+        total_weight = 0
+        days = [mon, tue, wed, thu, fri, sat, sun]
+        for val in days:
+            if val == '':
+                sg.popup('Please enter a value for each day ')
+                return
+            total_weight += float(val)
+        else:
+            average_weight = total_weight / 7
+            index_weight = average_weight - float(mon)
+
+            if bulk and level_one:
+                if 0.15 <= index_weight <= 0.35:
+                    sg.popup('Your Bulk is going great! Your average weight is', round(average_weight, 2))
+                else:
+                    sg.popup('Your weight is not aligned for your current goals! Your average weight is',
+                             round(average_weight, 2))
+
+            elif bulk and level_two:
+                if 0.35 <= index_weight <= 0.55:
+                    sg.popup('Your Bulk is going great! Your average weight is', round(average_weight, 2))
+                else:
+                    sg.popup('Your weight is not aligned for your current goals! Your average weight is',
+                             round(average_weight, 2))
+
+            elif bulk and level_three:
+                if 0.55 <= index_weight <= 1:
+                    sg.popup('Your Bulk is going great! Your average weight is', round(average_weight, 2))
+                else:
+                    sg.popup('Your weight is not aligned for your current goals! Your average weight is',
+                             round(average_weight, 2))
+
+            elif cut and level_one:
+                if -0.35 <= index_weight <= -0.15:
+                    sg.popup('Your Cut is going great! Your average weight is', round(average_weight, 2))
+                else:
+                    sg.popup('Your weight is not aligned for your current goals! Your average weight is',
+                             round(average_weight, 2))
+
+            elif cut and level_two:
+                if -0.55 <= index_weight <= -0.35:
+                    sg.popup('Your Cut is going great! Your average weight is', round(average_weight, 2))
+                else:
+                    sg.popup('Your weight is not aligned for your current goals! Your average weight is',
+                             round(average_weight, 2))
+
+            elif cut and level_three:
+                if -1 <= index_weight <= -0.55:
+                    sg.popup('Your Cut is going great! Your average weight is', round(average_weight, 2))
+                else:
+                    sg.popup('Your weight is not aligned for your current goals! Your average weight is',
+                             round(average_weight, 2))
+    else:
+        sg.popup('You need to use Bulking or cutting calculator first ')
+
 sg.theme('DarkBlue')
 
 BMR = [
@@ -266,63 +325,8 @@ while True:
         bulkcut(calculated, values['-BULK-'], values['-CUT-'], values['Level_One '], values['Level_Two '], values['Level_Three '])
 
     if event == 'Calculate Average Bodyweight':
-        if (values['-BULK-'] or values['-CUT-']) and (
-                values['Level_One '] or values['Level_Two '] or values['Level_Three ']):
-            total_weight = 0
-            days = ['-Monday-', '-Tuesday-', '-Wednesday-', '-Thursday-', '-Friday-', '-Saturday-', '-Sunday-']
-            for day in days:
-                val = values[day]
-                if val == '':
-                    sg.popup(f'Enter a value for {day}')
-                    break
-                total_weight += float(val)
-            else:
-                average_weight = total_weight / 7
-                index_weight = average_weight - float(values['-Monday-'])
+        trackbw(values['-BULK-'], values['-CUT-'], values['Level_One '], values['Level_Two '], values['Level_Three '], values['-Monday-'], values['-Tuesday-'], values['-Wednesday-'], values['-Thursday-'], values['-Friday-'], values['-Saturday-'], values['-Sunday-'])
 
-                if values['-BULK-'] and values['Level_One ']:
-                    if 0.15 <= index_weight <= 0.35:
-                        sg.popup('Your Bulk is going great! Your average weight is', round(average_weight, 2))
-                    else:
-                        sg.popup('Your weight is not aligned for your current goals! Your average weight is',
-                                 round(average_weight, 2))
-
-                elif values['-BULK-'] and values['Level_Two ']:
-                    if 0.35 <= index_weight <= 0.55:
-                        sg.popup('Your Bulk is going great! Your average weight is', round(average_weight, 2))
-                    else:
-                        sg.popup('Your weight is not aligned for your current goals! Your average weight is',
-                                 round(average_weight, 2))
-
-                elif values['-BULK-'] and values['Level_Three ']:
-                    if 0.55 <= index_weight <= 1:
-                        sg.popup('Your Bulk is going great! Your average weight is', round(average_weight, 2))
-                    else:
-                        sg.popup('Your weight is not aligned for your current goals! Your average weight is',
-                                 round(average_weight, 2))
-
-                elif values['-CUT-'] and values['Level_One ']:
-                    if -0.35 <= index_weight <= -0.15:
-                        sg.popup('Your Cut is going great! Your average weight is', round(average_weight, 2))
-                    else:
-                        sg.popup('Your weight is not aligned for your current goals! Your average weight is',
-                                 round(average_weight, 2))
-
-                elif values['-CUT-'] and values['Level_Two ']:
-                    if -0.55 <= index_weight <= -0.35:
-                        sg.popup('Your Cut is going great! Your average weight is', round(average_weight, 2))
-                    else:
-                        sg.popup('Your weight is not aligned for your current goals! Your average weight is',
-                                 round(average_weight, 2))
-
-                elif values['-CUT-'] and values['Level_Three ']:
-                    if -1 <= index_weight <= -0.55:
-                        sg.popup('Your Cut is going great! Your average weight is', round(average_weight, 2))
-                    else:
-                        sg.popup('Your weight is not aligned for your current goals! Your average weight is',
-                                 round(average_weight, 2))
-        else:
-            sg.popup('You need to use Bulking or cutting calculator first ')
 
 
 window.close()
